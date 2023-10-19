@@ -87,19 +87,58 @@ public class LibraryCard {
     }
 
     
+/**
+ * Issue a new book to the library card.
+ *
+ * @param book The book to borrow.
+ * @return true if the book is successfully borrowed, false otherwise.
+ * @throws IllegalBookIssueException if there's an issue with issuing the book.
+ */
 
-    /**
-     * Issue a new book
-     * @param Book: book to borrow 
-     * @return true if the book is successfully borrowed, false otherwise
-     */
+public boolean issueBook(Book book) throws IllegalBookIssueException {
 
-    public boolean issueBook(Book book){
-    	return false;
-   
+    // Check the number of books already borrowed on this card.
+    int numBooksBorrowed = borrowed.size();
+
+    // If the maximum allowed books (4) are already borrowed, return false
+    if (numBooksBorrowed > 4) {
+        return false;
     }
 
+    // If the book is already in the list of borrowed books, throw an exception
+    if (borrowed.contains(book)) {
+        throw new IllegalBookIssueException("The book is already issued on the library card!");
+    }
 
+    // Get the current date.
+    Date currDate = new Date(System.currentTimeMillis());
+
+    // Check if the card has expired. If so, return false
+    if (currDate.after(ExpiryDate)) {
+        return false;
+    }
+
+    // Check if the book is available
+    if (!book.getStatus()) {
+        return false;
+    }
+
+    // Check if there are any fines associated with the library card. If there are, return false
+    if (fine > 0) {
+        return false;
+    }
+
+    // Set the borrowing period based on book demand
+    if (book.getDemand() == 0) {
+        book.setDays(15);
+    } else {
+        book.setDays(3);
+    }
+
+    // Add the book to the list of borrowed books and return true.
+    borrowed.add(book);
+    return true;
+}
 
 
 }

@@ -94,7 +94,7 @@ public class Book {
         return status;
     }
 
-    public void setDemand(boolean status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 
